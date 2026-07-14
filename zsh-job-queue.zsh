@@ -29,6 +29,9 @@
 
 function _job_queue:init"${1:-}"() { # this quotation mark to fix syntax highlighting "
   zmodload zsh/datetime
+  # -F loads only the zf_-prefixed builtins, so the plain mkdir/rm names
+  # are left alone for the rest of the user's session
+  zmodload -F zsh/files b:zf_mkdir b:zf_rm
 
   # Log debugging messages?
   typeset -gi JOB_QUEUE_DEBUG=${JOB_QUEUE_DEBUG:-0}
@@ -64,7 +67,7 @@ function job-queue"${1:-}"() { # this quotation mark to fix syntax highlighting 
       local scope
       scope=$1
 
-      'command' 'rm' -rf $_job_queue_tmpdir${scope}
+      zf_rm -rf $_job_queue_tmpdir${scope}
     }
 
     # gets unfunction'd
@@ -97,7 +100,7 @@ function job-queue"${1:-}"() { # this quotation mark to fix syntax highlighting 
       scope=$1
       job_id=$2
 
-      'command' 'rm' $_job_queue_tmpdir${scope}/$job_id &>/dev/null
+      zf_rm $_job_queue_tmpdir${scope}/$job_id &>/dev/null
     }
 
     # _job_queue:push
@@ -133,7 +136,7 @@ function job-queue"${1:-}"() { # this quotation mark to fix syntax highlighting 
           _job_queue:debugger
 
           if ! [[ -d $_job_queue_tmpdir${scope} ]]; then
-            'command' 'mkdir' -p $_job_queue_tmpdir${scope}
+            zf_mkdir -p $_job_queue_tmpdir${scope}
           fi
 
           'builtin' 'echo' $job_description > $_job_queue_tmpdir${scope}/$job_id
@@ -181,7 +184,7 @@ function job-queue"${1:-}"() { # this quotation mark to fix syntax highlighting 
 
           'builtin' 'echo'
 
-          'command' 'rm' $front_of_queue_job_path &>/dev/null
+          zf_rm $front_of_queue_job_path &>/dev/null
         }
 
         # gets unfunction'd
