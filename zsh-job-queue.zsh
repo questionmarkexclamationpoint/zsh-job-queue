@@ -146,8 +146,8 @@ function job-queue"${1:-}"() { # this quotation mark to fix syntax highlighting 
         # gets unfunction'd
         function _job_queue:push:get_front_of_queue_job_id() {
           # cannot support debug message
-
-          'command' 'ls' -t $_job_queue_tmpdir${scope} | 'command' 'tail' -1
+          # sort by modification time descending, first result, basename; empty if none
+          'builtin' 'print' -r -- $_job_queue_tmpdir${scope}/*(Om[1]N:t)
         }
 
         # gets unfunction'd
@@ -161,7 +161,7 @@ function job-queue"${1:-}"() { # this quotation mark to fix syntax highlighting 
 
           front_of_queue_job_path=$_job_queue_tmpdir${scope}/$front_of_queue_job_id
 
-          msg_data=( ${(f)"$('command' 'cat' $front_of_queue_job_path)"} ) # this quotation mark to improve syntax highlighting "
+          msg_data=( ${(f)"$(<$front_of_queue_job_path)"} ) # this quotation mark to improve syntax highlighting "
           msg_description=$msg_data[1]
           msg_url=$msg_data[2]
 
