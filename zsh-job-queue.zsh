@@ -64,7 +64,7 @@ function job-queue"${1:-}"() { # this quotation mark to fix syntax highlighting 
       local scope
       scope=$1
 
-      rm -rf $_job_queue_tmpdir${scope}
+      'command' 'rm' -rf $_job_queue_tmpdir${scope}
     }
 
     # gets unfunction'd
