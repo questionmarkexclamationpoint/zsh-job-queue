@@ -222,7 +222,16 @@ function job-queue"${1:-}"() { # this quotation mark to fix syntax highlighting 
 
       local uuid
 
-      uuid=$('command' 'uuidgen' 2>/dev/null || 'command' 'cat' /dev/urandom | 'command' 'base64' | 'command' 'tr' -dc '0-9a-zA-Z' | 'command' 'head' -c36)
+      if (( $+commands[uuidgen] )); then
+        uuid=$('command' 'uuidgen')
+      else
+        'builtin' 'printf' -v uuid '%04x%04x-%04x-4%03x-%x%03x-%04x%04x%04x' \
+          $RANDOM $RANDOM \
+          $RANDOM \
+          $((RANDOM % 4096)) \
+          $((8 + RANDOM % 4)) $((RANDOM % 4096)) \
+          $RANDOM $RANDOM $RANDOM
+      fi
 
       REPLY="$EPOCHREALTIME--$uuid"
     }
