@@ -29,6 +29,7 @@
 
 function _job_queue:init"${1:-}"() { # this quotation mark to fix syntax highlighting "
   zmodload zsh/datetime
+  zmodload zsh/system
   # -F loads only the zf_-prefixed builtins, so the plain mkdir/rm names
   # are left alone for the rest of the user's session
   zmodload -F zsh/files b:zf_mkdir b:zf_rm
@@ -53,6 +54,9 @@ function _job_queue:init"${1:-}"() { # this quotation mark to fix syntax highlig
 
 function job-queue"${1:-}"() { # this quotation mark to fix syntax highlighting "
   emulate -LR zsh
+  # reseed random on the off-chance another fork started from the same pid without
+  # intervening $RANDOMs
+  RANDOM=$(( RANDOM ^ (EPOCHREALTIME * 1_000_000) ^ sysparams[pid] ))
 
   {
     # _job_queue:clear
