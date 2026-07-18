@@ -232,8 +232,8 @@ function job-queue"${1:-}"() { # this quotation mark to fix syntax highlighting 
         'builtin' 'printf' -v uuid '%04x%04x-%04x-4%03x-%x%03x-%04x%04x%04x' \
           $RANDOM $RANDOM \
           $RANDOM \
-          $((RANDOM % 4096)) \
-          $((8 + RANDOM % 4)) $((RANDOM % 4096)) \
+          $(( RANDOM % 4096 )) \
+          $(( 8 + RANDOM % 4 )) $(( RANDOM % 4096 )) \
           $RANDOM $RANDOM $RANDOM
       fi
 
