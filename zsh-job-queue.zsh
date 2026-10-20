@@ -196,7 +196,14 @@ function job-queue"${1:-}"() { # this quotation mark to fix syntax highlighting 
           front_of_queue_job_id=$(_job_queue:push:get_front_of_queue_job_id)
 
           while [[ $front_of_queue_job_id != $job_id ]]; do
-            front_of_queue_job_id=$(_job_queue:push:get_front_of_queue_job_id)
+          local REPLY
+
+          _job_queue:push:get_front_of_queue_job_id
+          front_of_queue_job_id=$REPLY
+
+          while [[ $front_of_queue_job_id != $job_id ]]; do
+            _job_queue:push:get_front_of_queue_job_id
+            front_of_queue_job_id=$REPLY
 
             front_of_queue_job_age=$(( $EPOCHREALTIME - ${front_of_queue_job_id%%-*} ))
 
