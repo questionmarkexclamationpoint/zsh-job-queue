@@ -188,7 +188,7 @@ function job-queue"${1:-}"() { # this quotation mark to fix syntax highlighting 
 
           'builtin' 'echo'
 
-          zf_rm $front_of_queue_job_path &>/dev/null
+          zf_rm -f $front_of_queue_job_path &>/dev/null
         }
 
         # gets unfunction'd
